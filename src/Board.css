@@ -1,0 +1,53 @@
+.welcome-text {
+    font-family: Verdana;
+}
+
+.board {
+  background: url(https://www.designbolts.com/wp-content/uploads/2019/09/Steel-iPhone-11-Wallpaper-High-Quality.jpg) no-repeat center;
+  background-size: cover;
+  box-shadow: 3px 5px 3px black;
+	height: 650px;
+  width: 700px;
+	display: grid; /* Enables CSS Grid */ 
+	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
+  grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
+  margin: auto;
+}
+
+.box {
+  border:5px solid white; /* Shows the lines in the CSS grid */
+  font-size: 120px;
+  padding-left: 72px;
+}
+
+button {
+  font-size: 15px;
+  border: 1px solid gray;
+  background: #f2f2f2;
+  border-radius: 20px;
+  height: 40px;
+  width: 200px;
+
+}
+body {
+    background-color: #ccffff;
+    display: flex ;
+    font-size: 50px;
+/* center the container horizontally */
+    justify-content: center ;
+/* this will center content vertically */
+    align-items: center;
+}
+/*the actual playing board*/
+
+
+@media all and (min-width: 480px) {
+  .Login {
+    padding: 200px 0;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}
