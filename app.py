@@ -16,7 +16,7 @@ socketio = SocketIO(
     manage_session=False
 )
 
-@app.route('/', defaults={"filename": "Board.html"})
+@app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 
 def index(filename):
