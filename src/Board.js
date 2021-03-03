@@ -105,7 +105,7 @@ useEffect(() => {
 
       
   return (
-    <div>
+   <div>
     <li>{props.curUser}'s Tic Tac Toe Board</li>
     <br></br>
     <div class="board">
