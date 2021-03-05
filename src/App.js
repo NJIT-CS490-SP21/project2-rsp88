@@ -12,7 +12,7 @@ function Inputspec() {
   const [name, setName] = useState([]);
   const inputRef = useRef(null);
   const [users, setUser] = useState(null);
-  
+  const [database, setData] = useState([]);
   function Login() {
   
   function handleSubmit() 
@@ -26,18 +26,25 @@ function Inputspec() {
         login(true);
         //setName(prevList => [...prevList, temp]);
         socket.emit('spectate', temp);
+        socket.emit('user_list', temp);
         console.log(temp);
       }  
     }
     
-    useEffect(() => {socket.on('spectate', (info) => {
-        
+    useEffect(() => {socket.on('spectate', 'user_list', (info) => {
         setName((prevList) => {
           let newList = [...prevList];
           newList = info;
           return newList;
         });
       });
+        
+        socket.on('user_list', (info) => {
+        console.log('Chat recieved');
+        console.log(info);
+        setData(info);
+      });
+      
       },[]);
       
     return (

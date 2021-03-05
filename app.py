@@ -2,12 +2,26 @@ import os
 from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 app = Flask(__name__, static_folder='./build/static')
 
-cors = CORS(app, resources={r"/": {"origins": ""}})
+# Point SQLAlchemy to your Heroku database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+# Gets rid of a warning
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+import models
+db.create_all()
 
 userList = []
+
+cors = CORS(app, resources={r"/": {"origins": ""}})
 
 socketio = SocketIO(
     app,
@@ -26,6 +40,12 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
+    people = models.Person.query.all()
+    users = []
+    for x in people:
+        users.append(x.username)
+    print(users)
+    socketio.emit('user_list', {'users' : users})
 
 @socketio.on('build')
 def build(data):
@@ -52,8 +72,9 @@ def on_disconnect():
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided
 
-socketio.run(
-    app,
-    host=os.getenv('IP', '0.0.0.0'),
-    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-)
+if __name__ == "__main__":
+    socketio.run(
+        app,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+    )
