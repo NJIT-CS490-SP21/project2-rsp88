@@ -6,7 +6,6 @@ import { useState, useRef, useEffect } from 'react';
 import Button from "react-bootstrap/Button";
 import io from 'socket.io-client';
 
-
 const socket = io();
 export function Board(props) {
   const [board, setBoard] = useState(['','','','','','','','','']);
@@ -131,7 +130,9 @@ useEffect(() => {
     </div>
     <b> Game winner is </b>
     <br></br>
-    {win !== null ? <div> {win} </div>:<div></div>}
+    <div>
+    {win !== null ? [win === 'X' ? <div > {win + ' ' + props.users[1]} </div> : <div > {win + ' ' + props.users[0]} </div> ]:<div></div>}
+    </div>
     </div>
     
     );

@@ -60,6 +60,7 @@ def reset(data):
     
 @socketio.on('spectate')
 def spectate(data):
+    print(str(userList))
     userList.append(data)
     print(str(data))
     socketio.emit('spectate', userList, broadcast=True, include_self=True)
@@ -68,6 +69,16 @@ def spectate(data):
 @socketio.on('disconnect')
 def on_disconnect():
     print('User disconnected!')
+    
+@socketio.on('join')
+def on_join(data):
+    print(str(data))
+    new = models.Person(username=data, score=100)
+    db.session.add(new)
+    db.session.commit()
+    people = models.Person.query.all()
+    print(people)
+    socketio.emit('join', data, broadcast=True, include_self=True)
 
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided

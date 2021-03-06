@@ -27,11 +27,12 @@ function Inputspec() {
         //setName(prevList => [...prevList, temp]);
         socket.emit('spectate', temp);
         socket.emit('user_list', temp);
+        socket.emit('join', temp);
         console.log(temp);
       }  
     }
     
-    useEffect(() => {socket.on('spectate', 'user_list', (info) => {
+    useEffect(() => {socket.on('spectate',(info) => {
         setName((prevList) => {
           let newList = [...prevList];
           newList = info;
@@ -46,6 +47,7 @@ function Inputspec() {
       });
       
       },[]);
+      
       
     return (
       <div className="Login">
@@ -68,7 +70,7 @@ function Inputspec() {
   const isLoggedIn = props.isLoggedIn;
   
   if (isLoggedIn) {
-    return <Board users={name} curUser={users}/>;
+    return <Board users={name} curUser={users} dataName={database}/>;
   }
     return <Login />;
   }
