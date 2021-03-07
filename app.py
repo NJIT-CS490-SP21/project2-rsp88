@@ -4,6 +4,7 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+import sqlalchemy
 
 load_dotenv(find_dotenv())
 
@@ -40,12 +41,7 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
-    people = models.Person.query.all()
-    users = []
-    for x in people:
-        users.append(x.username)
-    print(users)
-    socketio.emit('user_list', {'users' : users})
+    
 
 @socketio.on('build')
 def build(data):
@@ -73,12 +69,45 @@ def on_disconnect():
 @socketio.on('join')
 def on_join(data):
     print(str(data))
-    new = models.Person(username=data, score=100)
-    db.session.add(new)
+    # check if username already in db
+    
+    x = db.session.query(models.Person.username).filter_by(username=data).first() is not None
+    
+    if x != True:
+        newPerson = models.Person(username=data, score=100)
+        db.session.add(newPerson)
+        db.session.commit()
+    #
+    #people = models.Person.query.all()
+    users = []
+    score = []
+    y = db.session.query(models.Person)
+    dc_order = sqlalchemy.sql.expression.desc(models.Person.score)
+    inOrder = y.order_by(dc_order)
+    
+    for x in inOrder:
+        users.append(x.username)
+        score.append(x.score)
+    print(users)
+    print(score)
+    socketio.emit('user_list', {'users' : users})
+    socketio.emit('scor_list', {'score' : score})
+    
+    socketio.emit('join', data, broadcast=True, include_self=True)
+    
+@socketio.on('result')
+def on_result(data):
+    player1 = db.session.query(models.Person).filter_by(username=data['winner']).first()
+    player1.score= player1.score + 1
+    db.session.add(player1)
+    player2 = db.session.query(models.Person).filter_by(username=data['loser']).first()
+    player2.score= player2.score - 1
+    db.session.add(player2)
     db.session.commit()
     people = models.Person.query.all()
     print(people)
-    socketio.emit('join', data, broadcast=True, include_self=True)
+    socketio.emit('result', data, broadcast=True, include_self=False)
+    
 
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided

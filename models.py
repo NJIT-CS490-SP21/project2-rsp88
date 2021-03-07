@@ -6,5 +6,5 @@ class Person(db.Model):
     score = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return '<Person %r>' % self.username
+        return '<Person %r>' % self.username,self.score
     

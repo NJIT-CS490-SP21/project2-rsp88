@@ -10,6 +10,10 @@ const socket = io();
 export function Board(props) {
   const [board, setBoard] = useState(['','','','','','','','','']);
   const [variable, setVariable] = useState(0);
+  const [database, setData] = useState([]);
+  const [score, getScore] = useState([]);
+  const [hide, show] = useState(false);
+  //const [scoreboard, setScore] = useState([]);
   //console.log(props.users[0]);
   //console.log(props.curUser);
   //console.log(board);
@@ -42,7 +46,7 @@ export function Board(props) {
         
       return (<div className="box" onClick={toggleText}>{board[props.name]}</div>);
     }
-  
+    
     useEffect(() => {
       socket.on('build', (data) => {
         
@@ -72,9 +76,7 @@ export function Board(props) {
       });
       }, [board]);
       
-      
  function winner(squares) {
-   
   const lines = [[0, 1, 2],[3, 4, 5],
 	  [6, 7, 8],[0, 3, 6],[1, 4, 7],
 	  [2, 5, 8],[0, 4, 8],[6, 4, 2],];
@@ -86,6 +88,30 @@ export function Board(props) {
 	}
 	return null;
 }
+
+useEffect(() => {
+    console.log(win);
+    if(win != null){
+      //setWinner_checker("Winner is Player " + winner);
+      if (win === 'X' && props.curUser === props.users[0]){
+        socket.emit('result',{'winner':props.users[0],'loser':props.users[1]});
+      }
+      else if (win === 'O' && props.curUser === props.users[0]){
+        socket.emit('result',{'winner':props.users[1],'loser':props.users[0]});
+      }
+    }
+  }, [win]);
+  
+  let winner_checker2;
+  if(win){
+    winner_checker2 = "Winner is Player " + win;
+  }
+  console.log('-----------'); 
+  console.log(win);  
+
+
+
+
 function handleReset()
 {
   let resetBoard = ['', '', '', '', '', '', '', '', ''];
@@ -102,6 +128,25 @@ useEffect(() => {
       });
       }, [board]);
 
+
+useEffect(() => {
+  socket.on('user_list', (info) => {
+        console.log('Chat recieved');
+        console.log(info);
+        setData(info.users);
+      });
+      },[]);
+
+useEffect(() => {
+  socket.on('scor_list', (info) => {
+        console.log('Chat recieved');
+        console.log(info);
+        getScore(info['score']);
+        console.log(score);
+      });
+      },[]);
+      console.log(database);
+      console.log(score);
       
   return (
     <div>
@@ -131,11 +176,30 @@ useEffect(() => {
     <b> Game winner is </b>
     <br></br>
     <div>
-    {win !== null ? [win === 'X' ? <div > {win + ' ' + props.users[1]} </div> : <div > {win + ' ' + props.users[0]} </div> ]:<div></div>}
-    </div>
+    {win !== null ? [win === 'X' ? <div> {win + ' ' + props.users[0]} </div> : <div > {win + ' ' + props.users[1]} </div> ]:<div></div>}
     </div>
     
+    <button onClick={()=>show(!hide)}>Scoreboard</button>
+    {
+    hide ?
+    <div>
+    
+    <ul>
+    {database.map((listItem) =>(
+      <div>{listItem}</div>
+    ))}
+    </ul>
+    
+    <ul>
+        {score.map((listItem) => (
+      <div>{listItem}</div>
+    ))}
+    </ul>
+    </div>
+    :null
+    }
+    </div>
     );
-  
+    
 }
 export default Board;

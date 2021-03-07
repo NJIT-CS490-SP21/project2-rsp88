@@ -12,7 +12,6 @@ function Inputspec() {
   const [name, setName] = useState([]);
   const inputRef = useRef(null);
   const [users, setUser] = useState(null);
-  const [database, setData] = useState([]);
   function Login() {
   
   function handleSubmit() 
@@ -26,7 +25,6 @@ function Inputspec() {
         login(true);
         //setName(prevList => [...prevList, temp]);
         socket.emit('spectate', temp);
-        socket.emit('user_list', temp);
         socket.emit('join', temp);
         console.log(temp);
       }  
@@ -40,15 +38,8 @@ function Inputspec() {
         });
       });
         
-        socket.on('user_list', (info) => {
-        console.log('Chat recieved');
-        console.log(info);
-        setData(info);
-      });
-      
       },[]);
-      
-      
+  
     return (
       <div className="Login">
         <div><b>Type in your Username</b></div>
@@ -70,7 +61,7 @@ function Inputspec() {
   const isLoggedIn = props.isLoggedIn;
   
   if (isLoggedIn) {
-    return <Board users={name} curUser={users} dataName={database}/>;
+    return <Board users={name} curUser={users}/>;
   }
     return <Login />;
   }
