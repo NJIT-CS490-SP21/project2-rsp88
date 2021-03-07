@@ -51,6 +51,7 @@
 1. When the board resets and user wins, That user is getting extra points.
 2. Spectators are allowed to reset the Board.
 3. User is able to click X and O on the same board.
+4. When the second user does the first move and wins, It shows the first player as a winner. But the score changes for the right user.
 
 ## Technical Issues and Solution
 1. I had problem where names weren't printing.
