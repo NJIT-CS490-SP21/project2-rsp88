@@ -25,20 +25,21 @@ function Inputspec() {
         login(true);
         //setName(prevList => [...prevList, temp]);
         socket.emit('spectate', temp);
+        socket.emit('join', temp);
         console.log(temp);
       }  
     }
     
-    useEffect(() => {socket.on('spectate', (info) => {
-        
+    useEffect(() => {socket.on('spectate',(info) => {
         setName((prevList) => {
           let newList = [...prevList];
           newList = info;
           return newList;
         });
       });
+        
       },[]);
-      
+  
     return (
       <div className="Login">
         <div><b>Type in your Username</b></div>

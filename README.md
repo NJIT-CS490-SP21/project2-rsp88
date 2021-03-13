@@ -18,30 +18,44 @@
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
 3. Push to Heroku: `git push heroku main`
 
-## Creating Board, playable X's and O's and winner result
-1. I used state to create array which represents each boxes.
-2. I named the user as 0 for 'X' and 1 for 'O'.
-3. I dulpicated the board array, which I named array. It stores the values of X and O in it.
-4. If the user 0 clicks the button, array takes in 'X' and if it's user 1 it takes in 'O'.
-5. I emit them in build with array values. By assigning the onclick value to function name is returns the value in 'X' and 'O'.
-6. I followed similar steps in useEffect in order to make it for realtime use(for more than 1 individual).
-7. For the winner declaration, I stored the winning sequences in an array which passes through a for loop and determines if the user wins or not.
+## Database setup
+1. Install PostGreSQL: `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs` Enter yes to all prompts.
+2. Initialize PSQL database: `sudo service postgresql initdb`
+3. Start PSQL: `sudo service postgresql start`
+4. Make a new superuser: `sudo -u postgres createuser --superuser $USER` **If you get an error saying "could not change directory", that's okay! It worked!**
+5. Make a new database: `sudo -u postgres createdb $USER` **If you get an error saying "could not change directory", that's okay! It worked!**
+6. Make sure your user shows up:
+    - a) `psql`
+    - b) `\du` look for ec2-user as a user (**take a screenshot**)
+    - c) `\l` look for ec2-user as a database (**take a screenshot**)
+7. Make a new user:
+    - a) `psql` (if you already quit out of psql)
+    - b) Type this with your username and password (DONT JUST COPY PASTE): `create user some_username_here superuser password 'some_unique_new_password_here';` e.g. `create user namanaman superuser password 'mysecretpassword123';`
+    - c) \q to quit out of sql
+8. Save your username and password in a `sql.env` file with the format `SQL_USER=` and `SQL_PASSWORD=`.
+9. To use SQL in Python: `pip install psycopg2-binary`
+10. `pip install Flask-SQLAlchemy==2.1`
 
-## Resetting the Board
-1. I created function called handleReset wich contains an emplty array resetBoard.
-2. I emit that to reset in sockets.
-3. Then used useEffect to rest the data in every single board open.
+
+## Database in server
+1. Created socketio for passing the username and the score list.
+2. Created an if statement where idon't pass the person if it's already in the database.
+3. When the person is not in the database, it adds that person.
+4. I used sqlalchemy to get result score in decending order. 
+5. To add and remove points I added new on_result(data).
+6. on_result(data) I'm sending the data to Board.js, which checks if the user is in the database and
+    prints the data in frontend.
+7. Then I'm using map function to print out the database and score.
  
 ## Known Problems encountered
-1. Previous users stays on the app until you restart the server.
-2. I couldn't display the username of the winner, glad it's not applicable. 
-3. Spectators are allowed to reset the Board.
-4. User is able to click X and O on the same board.
+1. When the board resets and user wins, That user is getting extra points.
+2. Spectators are allowed to reset the Board.
+3. User is able to click X and O on the same board.
+4. When the second user does the first move and wins, It shows the first player as a winner. But the score changes for the right user.
 
 ## Technical Issues and Solution
-1. I had problem where names were overlapping on board (same name 4-5 times).
+1. I had problem where names weren't printing.
 -> To fix that I used map statement from one of the lectures. 
-2. Couldn't figure out how to win function.
--> I googled and saw an example on www.freecodecamp.org.
-3. The 'X' and 'O' buttons were clickable after they were assigned and after the user won.
--> Used an if statement which lets user click the button only when certain conditions are met.
+2. Score list was printing as a string, I added the ['score'] as this and it worked for the list.
+3. For the decending order
+-> Used sqlalchemy before the score gets send to the script.

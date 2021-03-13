@@ -51,3 +51,9 @@ body {
     max-width: 320px;
   }
 }
+ul{
+  display: inline-block;
+    *display: inline;
+    zoom: 1
+
+}
