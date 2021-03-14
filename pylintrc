@@ -1,3 +1,3 @@
 [MASTER]
 disable= E1101, C0413, W1508, R0903, W0603, C0103
-"python.linting.pylintArgs": ["--disable={c0103}"]
+

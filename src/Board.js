@@ -1,10 +1,10 @@
-import logo from './logo.svg';
 import React from 'react';
 import './Board.css';
 import './App.js';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from "react-bootstrap/Button";
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 
 const socket = io();
 export function Board(props) {
@@ -46,6 +46,11 @@ export function Board(props) {
         
       return (<div className="box" onClick={toggleText}>{board[props.name]}</div>);
     }
+    TicTacToe.propTypes={
+      curUser: PropTypes.string,
+      users: PropTypes.string,
+      name: PropTypes.string,
+    }
     
     useEffect(() => {
       socket.on('build', (data) => {
@@ -78,8 +83,8 @@ export function Board(props) {
       
  function winner(squares) {
   const lines = [[0, 1, 2],[3, 4, 5],
-	  [6, 7, 8],[0, 3, 6],[1, 4, 7],
-	  [2, 5, 8],[0, 4, 8],[6, 4, 2],];
+  [6, 7, 8],[0, 3, 6],[1, 4, 7],
+	[2, 5, 8],[0, 4, 8],[6, 4, 2],];
 	for (let i = 0; i < lines.length; i++) {
 		const [x, y, z] = lines[i];
 		if (squares[x] && squares[x] === squares[y] && squares[x] === squares[z]) {
@@ -102,16 +107,6 @@ useEffect(() => {
     }
   }, [win]);
   
-  let winner_checker2;
-  if(win){
-    winner_checker2 = "Winner is Player " + win;
-  }
-  console.log('-----------'); 
-  console.log(win);  
-
-
-
-
 function handleReset()
 {
   let resetBoard = ['', '', '', '', '', '', '', '', ''];
@@ -150,9 +145,9 @@ useEffect(() => {
       
   return (
     <div>
-    <li>{props.curUser}'s Tic Tac Toe Board</li>
+    <li>{props.curUser}s Tic Tac Toe Board</li>
     <br></br>
-    <div class="board">
+    <div className="board">
     <TicTacToe name="0" users={props.users} curUser={props.curUser}/>
     <TicTacToe name="1" users={props.users} curUser={props.curUser}/>
     <TicTacToe name="2" users={props.users} curUser={props.curUser}/>
@@ -169,8 +164,8 @@ useEffect(() => {
     </Button>
     <div>
       <p>Users Online</p>
-      {props.users.map((listItem) => (
-        <li>{listItem}</li>
+      {props.users.map((listItem, index) => (
+        <li key = {index}>{listItem}</li>
       ))}
     </div>
     <b> Game winner is </b>
@@ -185,14 +180,14 @@ useEffect(() => {
     <div>
     
     <ul>
-    {database.map((listItem) =>(
-      <div>{listItem}</div>
+    {database.map((listItem, index) =>(
+      <div key = {index} >{listItem}</div>
     ))}
     </ul>
     
     <ul>
-        {score.map((listItem) => (
-      <div>{listItem}</div>
+        {score.map((listItem, index) => (
+      <div key = {index}>{listItem}</div>
     ))}
     </ul>
     </div>
@@ -202,4 +197,9 @@ useEffect(() => {
     );
     
 }
+Board.propTypes={
+      curUser: PropTypes.string,
+      users: PropTypes.string,
+      name: PropTypes.string,
+    }
 export default Board;
