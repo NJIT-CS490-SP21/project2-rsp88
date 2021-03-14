@@ -1,9 +1,9 @@
 import './Board.css';
 import {Board} from './Board.js';
 import React, { useState, useRef, useEffect } from "react";
-import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 
 const socket = io();
 
@@ -67,4 +67,7 @@ function Inputspec() {
   }
   return <Greeting isLoggedIn={log} />;
 }
+Inputspec.propTypes={
+      isLoggedIn: PropTypes.string,
+    }
 export default Inputspec;
