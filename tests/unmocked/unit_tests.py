@@ -14,16 +14,16 @@ class AddUserTestCase(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
             {
-                KEY_INPUT: {'winner': 'Raj', 'loser': 'Chirag'},
-                KEY_EXPECTED: [116, 90]
+                KEY_INPUT: {'winner': 'Raj', 'loser': 'test'},
+                KEY_EXPECTED: [102, 98]
             },
             {
-                KEY_INPUT: {'winner': 'Chirag', 'loser': 'Akshit'},
-                KEY_EXPECTED: [89, 94]
+                KEY_INPUT: {'winner': 'test', 'loser': 'test2'},
+                KEY_EXPECTED: [99, 99]
             },
             {
-                KEY_INPUT: {'winner': 'Akshit', 'loser': 'Raj'},
-                KEY_EXPECTED: [93, 117]
+                KEY_INPUT: {'winner': 'test2', 'loser': 'Raj'},
+                KEY_EXPECTED: [99, 100]
             },
         ]
 
